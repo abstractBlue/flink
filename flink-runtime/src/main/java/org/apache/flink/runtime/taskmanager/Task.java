@@ -119,10 +119,16 @@ import static org.apache.flink.util.Preconditions.checkState;
  * produce its results (intermediate result partitions) and communicate
  * with the JobManager.
  *
+ * Task表示一个在TaskManager中执行的并行子任务。
+ * 一个Task包装一个Flink operator并运行它，提供所有必须的服务，如消费输入数据，产生结果和JobManager通信。
+ *
  * <p>The Flink operators (implemented as subclasses of
  * {@link AbstractInvokable} have only data readers, writers, and certain event callbacks.
  * The task connects those to the network stack and actor messages, and tracks the state
  * of the execution and handles exceptions.
+ *
+ * Flink operators只能读取数据、写入数据和某事件的回调。
+ * Task连接network stack和actor messages，并且跟踪记录执行状态和处理异常。
  *
  * <p>Tasks have no knowledge about how they relate to other tasks, or whether they
  * are the first attempt to execute the task, or a repeated attempt. All of that
@@ -130,7 +136,13 @@ import static org.apache.flink.util.Preconditions.checkState;
  * the task's configuration, and the IDs of the intermediate results to consume and
  * produce (if any).
  *
+ * task不知道如何联系其他tasks，也不知道是第一次尝试执行该task还是重复尝试执行。
+ * 只有JobManager知道这些。
+ * 所有task只知道自己运行的代码，task的配置，和生产和消费中间结果的ID（如果有的话）
+ *
  * <p>Each Task is run by one dedicated thread.
+ *
+ * 每一个任务都有专门的线程运行。
  */
 public class Task implements Runnable, TaskSlotPayload, TaskActions, PartitionProducerStateProvider, CheckpointListener, BackPressureSampleableTask {
 
